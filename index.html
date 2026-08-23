@@ -424,66 +424,45 @@ h2.slide-h2{font-size:19px;font-weight:700;color:var(--sage);line-height:1.2;mar
 </div>
 </div>
 
-<!-- S7 RESERVE — PRICING -->
-<div class="slide">
-<div class="slide-inner ctr">
-  <div class="tag gold">Step 3 of 3 — Pricing</div>
-  <h2 class="slide-h2">Reserve Your Copy</h2>
-  <p class="slide-p muted">Choose the edition that fits you. All editions include the full Vol 1 content.</p>
-  <div style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navytext);border-radius:8px;padding:5px 14px;text-align:center;font-size:11px;font-weight:700;margin-bottom:4px;">🎉 First 25 Purchases Get 10% OFF — Limited Time!</div>
-  <div style="background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.25);border-radius:8px;padding:4px 14px;text-align:center;font-size:10px;color:var(--gold);margin-bottom:5px;">🔥 Be among the first to reserve your copy!</div>
-  <div class="price-grid">
-    <div class="pc"><h4>Student Edition</h4><div class="amt">INR 499</div><p>Online / digital edition<br/>Students & job seekers</p></div>
-    <div class="pc"><h4>International</h4><div class="amt">$9.99</div><p>Digital edition<br/>Global readers worldwide</p></div>
-    <div class="pc"><h4>Print Edition</h4><div class="amt">On Request</div><p>Contact us for details<br/>Price to be announced</p></div>
-    <div class="pc"><h4>Corporate / Bulk</h4><div class="amt">Ask Us</div><p>Custom pricing included<br/>Team training sessions</p></div>
-  </div>
-  <p class="slide-p" style="font-size:11px;color:var(--muted);padding-bottom:6px;">→ Click the next arrow to fill in your reservation details</p>
-</div>
-</div>
-
-<!-- S8 RESERVE — FORM -->
-<div class="slide alt">
-<div class="slide-inner ctr">
-  <div class="tag gold">Reserve Your Copy — Details</div>
-  <h2 class="slide-h2">Confirm Your Reservation</h2>
-  <div class="frow">
-    <div class="fg"><label>Name</label><input type="text" id="rn" placeholder="Your full name"/></div>
-    <div class="fg"><label>Email or WhatsApp</label><input type="text" id="rc" placeholder="name@email.com or +91..."/></div>
-  </div>
-  <div class="frow">
-    <div class="fg"><label>Edition</label>
-      <select id="re">
-        <option value="student">Student — INR 499</option>
-        <option value="international">International — $9.99</option>
-        <option value="print">Print — On Request</option>
-        <option value="corporate">Corporate / Bulk</option>
-      </select>
-    </div>
-    <div class="fg"><label>City / Country</label><input type="text" id="rci" placeholder="Hyderabad / Dubai..."/></div>
-  </div>
-  <div class="fg"><label>Message / Bulk Order Details (Optional)</label><input type="text" id="rm" placeholder="Number of copies, team size, training requirements..."/></div>
-  <div style="font-size:9px;color:var(--muted);text-align:center;font-style:italic;margin-bottom:6px;line-height:1.4;">🔒 Each copy is Social DRM protected — your name, email & mobile are embedded on every page. Please do not share or forward your copy.</div>
-  <div class="frow">
-    <button class="btn gold" onclick="subRV()">Reserve My Copy →</button>
-    <button class="btn green" onclick="window.open('https://wa.me/917095700725?text=Hi%2C%20I%20want%20to%20reserve%20Understanding%20BIM%20and%20Why%20It%20Matters','_blank')">💬 Reserve via WhatsApp</button>
-  </div>
-  <div class="ok" id="ok-rv">✅ Reservation confirmed! We will contact you within 24 hours with payment and delivery details.</div>
-</div>
-</div>
-
 <!-- S9 BUY NOW -->
 <div class="slide">
 <div class="slide-inner ctr">
   <div class="tag gold">Purchase Directly</div>
   <h2 class="slide-h2">Buy Now — Choose Your Platform</h2>
-  <p class="slide-p muted">All platforms available at launch. WhatsApp purchase available immediately.</p>
   <div class="buy-grid">
     <div class="bb" onclick="buyF('amazon')"><div class="bi">📦</div><div><h5>Amazon KDP<span class="cs">Soon</span></h5><p>Print & Kindle · Global delivery</p></div></div>
     <div class="bb" onclick="buyF('google')"><div class="bi">📗</div><div><h5>Google Play Books<span class="cs">Soon</span></h5><p>Digital · Android & Web</p></div></div>
     <div class="bb" onclick="buyF('apple')"><div class="bi">📘</div><div><h5>Apple Books<span class="cs">Soon</span></h5><p>Digital · iPhone & iPad</p></div></div>
-    <div class="bb" onclick="buyF('india')"><div class="bi">🏷️</div><div><h5>Buy Direct — India<span class="cs">Soon</span></h5><p>INR 499 · UPI / Card / Net Banking</p></div></div>
-    <div class="bb full" onclick="buyF('wa')"><div class="bi">💬</div><div><h5>Buy via WhatsApp — Available Now</h5><p>Message us directly · +91 70957 00725 · Fastest response</p></div></div>
+    <div class="bb" id="buyIndiaBtn"><div class="bi">🏷️</div><div><h5>Buy Direct — India</h5><p>INR 499 (inclusive of GST) · UPI / Card / Net Banking</p></div></div>
+    <div class="bb" id="buyIntlBtn"><div class="bi">🌍</div><div><h5>Buy Direct — International</h5><p>$9.99 · Card / Global Bank Transfer</p></div></div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    var RAZORPAY_KEY = "rzp_live_TSmVNqMCIwqPF9";
+    function openRazorpay(amountInSmallestUnit, currencyCode) {
+      var options = {
+        key: RAZORPAY_KEY,
+        amount: amountInSmallestUnit,
+        currency: currencyCode,
+        name: "NRK Eco Green BIM and Infra",
+        description: "Understanding BIM and Why It Matters — Vol 1",
+        image: "https://i.postimg.cc/MGLjMYT6/IMG-20260725-WA0034.jpg",
+        handler: function (response) {
+          alert("Payment successful! Your copy will be emailed to you shortly.");
+        },
+        prefill: { name: "", email: "", contact: "" },
+        theme: { color: "#c9a227" }
+      };
+      var rzp = new Razorpay(options);
+      rzp.open();
+    }
+    document.getElementById('buyIndiaBtn').addEventListener('click', function () {
+      openRazorpay(49900, "INR");
+    });
+    document.getElementById('buyIntlBtn').addEventListener('click', function () {
+      openRazorpay(999, "USD");
+    });
+    </script>
+    <div class="bb full" onclick="window.open('https://wa.me/917095700725?text=Hi%2C%20I%27m%20interested%20in%20a%20Corporate%2FBulk%20order%20of%20Understanding%20BIM%20and%20Why%20It%20Matters','_blank')"><div class="bi">🏢</div><div><h5>Corporate / Bulk Orders</h5><p>Custom pricing &amp; team training · Contact us for a quote</p></div></div>
   </div>
 </div>
 </div>
@@ -532,35 +511,6 @@ h2.slide-h2{font-size:19px;font-weight:700;color:var(--sage);line-height:1.2;mar
   </div>
   <div style="text-align:center;margin-top:6px;">
     <button class="btn outline" style="width:auto;padding:8px 24px;font-size:12px;" onclick="notB2()">🔔 Notify Me When Vol 2 Launches</button>
-  </div>
-</div>
-</div>
-
-<!-- S11 EDMF -->
-<div class="slide">
-<div class="slide-inner">
-  <div class="tag gold">Core Framework</div>
-  <h2 class="slide-h2">ELEVORE Digital Maturity Framework (EDMF)</h2>
-  <p class="slide-p muted" style="margin-bottom:6px;">Where does your organisation stand today? Your transformation roadmap from fragmented operations to Construction Intelligence.</p>
-  <div class="edmf-lv l5"><div class="lv-n">L5</div><div class="lv-emoji">🧠</div><div class="lv-info"><div class="lv-title">Construction Intelligence</div><div class="lv-desc">Predictive analytics · Blockchain PPPG · Digital Twin operational · AI-assisted governance · Capital fully protected</div></div></div>
-  <div class="edmf-lv l4"><div class="lv-n">L4</div><div class="lv-emoji">📊</div><div class="lv-info"><div class="lv-title">Integrated Governance</div><div class="lv-desc">BIM+ERP connected · CPDGR active · Real-time executive dashboards · Evidence-based payment · IoT & drone integration</div></div></div>
-  <div class="edmf-lv l3"><div class="lv-n">L3</div><div class="lv-emoji">🏗️</div><div class="lv-info"><div class="lv-title">BIM Collaboration</div><div class="lv-desc">Federated models · CDE-governed · Clash detection · BEP-compliant · Model-based payment verification beginning</div></div></div>
-  <div class="edmf-lv l2"><div class="lv-n">L2</div><div class="lv-emoji">💻</div><div class="lv-info"><div class="lv-title">Digital But Disconnected</div><div class="lv-desc">BIM models produced · Not governed · CDE absent · Payment still trust-based · BIM used as drawing tool only</div></div></div>
-  <div class="edmf-lv l1"><div class="lv-n">L1</div><div class="lv-emoji">📋</div><div class="lv-info"><div class="lv-title">Manual / Fragmented</div><div class="lv-desc">Paper drawings · Manual processes · Trust-based payment · 85% of Indian construction</div></div></div>
-  <div style="text-align:center;margin-top:2px;padding-bottom:8px;font-size:10px;line-height:1.4;color:var(--muted);font-style:italic;">Your roadmap — wherever you are to Level 3 and beyond.</div>
-</div>
-</div>
-
-<!-- S12 TESTIMONIALS -->
-<div class="slide alt">
-<div class="slide-inner ctr">
-  <div class="tag gold">Early Readers</div>
-  <h2 class="slide-h2">What People Are Saying</h2>
-  <div class="testi-grid" id="tc">
-    <div class="tc"><div class="stars">★★★★★</div><div class="qt">"Finally a BIM book written for Indian construction reality — not just western theory. Every project manager needs this."</div><div class="nm">Senior Project Manager</div><div class="rl">Infrastructure, Hyderabad</div></div>
-    <div class="tc"><div class="stars">★★★★★</div><div class="qt">"The EDMF Framework alone is worth the entire book. I immediately knew where my organisation stands and what to do next."</div><div class="nm">Director, Real Estate Developer</div><div class="rl">Chennai, Tamil Nadu</div></div>
-    <div class="tc"><div class="stars">★★★★★</div><div class="qt">"As a student, Chapter 1 gave me more clarity about BIM in 20 pages than two years of engineering college."</div><div class="nm">Civil Engineering Student</div><div class="rl">NIT Warangal</div></div>
-    <div class="tc"><div class="stars">★★★★★</div><div class="qt">"The capital protection chapter changed how I think about project investments. Essential reading for any developer."</div><div class="nm">CEO, Construction Company</div><div class="rl">Bengaluru, Karnataka</div></div>
   </div>
 </div>
 </div>
@@ -699,7 +649,7 @@ h2.slide-h2{font-size:19px;font-weight:700;color:var(--sage);line-height:1.2;mar
 </div>
 
 <script>
-const TOT=15;let cur=0;
+const TOT=11;let cur=0;
 function bldDots(){const d=document.getElementById('dots');if(!d)return;d.innerHTML='';for(let i=0;i<TOT;i++){const b=document.createElement('button');b.className='dot'+(i===0?' active':'');b.onclick=()=>nav(i);d.appendChild(b);}}
 function nav(n){cur=Math.max(0,Math.min(TOT-1,n));const t=document.getElementById('track');if(t)t.style.transform=`translateX(-${cur*100}vw)`;document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));const c=document.getElementById('ctr');if(c)c.textContent=`${cur+1} / ${TOT}`;const al=document.getElementById('al'),ar=document.getElementById('ar');if(al)al.classList.toggle('hidden',cur===0);if(ar)ar.classList.toggle('hidden',cur===TOT-1);}
 function go(d){nav(cur+d);}
