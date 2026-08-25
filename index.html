@@ -425,18 +425,80 @@ h2.slide-h2{font-size:19px;font-weight:700;color:var(--sage);line-height:1.2;mar
 </div>
 
 <!-- S9 BUY NOW -->
-<div class="slide">
-<div class="slide-inner ctr">
-  <div class="tag gold">Purchase Directly</div>
-  <h2 class="slide-h2">Buy Now — Choose Your Platform</h2>
-  <div class="buy-grid">
-    <div class="bb" onclick="buyF('amazon')"><div class="bi">📦</div><div><h5>Amazon KDP<span class="cs">Soon</span></h5><p>Print & Kindle · Global delivery</p></div></div>
-    <div class="bb" onclick="buyF('google')"><div class="bi">📗</div><div><h5>Google Play Books<span class="cs">Soon</span></h5><p>Digital · Android & Web</p></div></div>
-    <div class="bb" onclick="buyF('apple')"><div class="bi">📘</div><div><h5>Apple Books<span class="cs">Soon</span></h5><p>Digital · iPhone & iPad</p></div></div>
-    <div class="bb" id="buyIndiaBtn"><div class="bi">🏷️</div><div><h5>Buy Direct — India</h5><p>INR 499 (inclusive of GST) · UPI / Card / Net Banking</p></div></div>
-    <div class="bb" id="buyIntlBtn"><div class="bi">🌍</div><div><h5>Buy Direct — International</h5><p>$9.99 · Card / Global Bank Transfer</p></div></div>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
+<!--
+  REPLACES the two buy buttons + script block currently in index.html
+  (the buyIndiaBtn / buyIntlBtn section). This version collects name
+  + email on YOUR page before opening Razorpay, so delivery never
+  depends on which fields Razorpay's own checkout happens to show.
+-->
+
+<div class="fg"><label>Your Name</label><input type="text" id="buyerName" placeholder="Full name"/></div>
+<div class="fg"><label>Your Email</label><input type="email" id="buyerEmail" placeholder="Where your book will be sent"/></div>
+
+<div class="bb" id="buyIndiaBtn"><div class="bi">🏷️</div><div><h5>Buy Direct — India</h5><p>INR 499 (inclusive of GST) · UPI / Card / Net Banking</p></div></div>
+<div class="bb" id="buyIntlBtn"><div class="bi">🌍</div><div><h5>Buy Direct — International</h5><p>$9.99 · Card / Global Bank Transfer</p></div></div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var RAZORPAY_KEY = "rzp_live_TSmVNqMCIwqPF9";
+
+function validateBuyerDetails() {
+  var name = document.getElementById('buyerName').value.trim();
+  var email = document.getElementById('buyerEmail').value.trim();
+  var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!name) {
+    alert("Please enter your name before proceeding to payment.");
+    return null;
+  }
+  if (!email || !emailPattern.test(email)) {
+    alert("Please enter a valid email address — this is where your book will be delivered.");
+    return null;
+  }
+  return { name: name, email: email };
+}
+
+function openRazorpay(amountInSmallestUnit, currencyCode) {
+  var buyer = validateBuyerDetails();
+  if (!buyer) return; // stop here if name/email missing or invalid
+
+  var options = {
+    key: RAZORPAY_KEY,
+    amount: amountInSmallestUnit,
+    currency: currencyCode,
+    name: "NRK Eco Green BIM and Infra",
+    description: "Understanding BIM and Why It Matters — Vol 1",
+    image: "https://i.postimg.cc/MGLjMYT6/IMG-20260725-WA0034.jpg",
+
+    // This is the key change: we send the buyer's name/email as
+    // "notes" — data WE captured and control. Razorpay returns these
+    // unchanged in the payment.captured webhook regardless of which
+    // payment method the buyer used or what Razorpay's own UI asked for.
+    notes: {
+      buyer_name: buyer.name,
+      buyer_email: buyer.email
+    },
+
+    handler: function (response) {
+      alert("Payment successful! Your copy will be emailed to " + buyer.email + " shortly.");
+    },
+
+    prefill: { name: buyer.name, email: buyer.email, contact: "" },
+    theme: { color: "#c9a227" }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
+
+document.getElementById('buyIndiaBtn').addEventListener('click', function () {
+  openRazorpay(49900, "INR");
+});
+document.getElementById('buyIntlBtn').addEventListener('click', function () {
+  openRazorpay(999, "USD");
+});
+</script>
+
     var RAZORPAY_KEY = "rzp_live_TSmVNqMCIwqPF9";
     function openRazorpay(amountInSmallestUnit, currencyCode) {
       var options = {
